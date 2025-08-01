@@ -8,7 +8,7 @@ page = driver.page_source
 events = bs_obj.find_all("div", class_="board_list")
 print(events)
 
-# 1페이지 이벤트들 
+# 페이지.1 이벤트 목록 
 events = bs_obj.find_all("a") 
 
 for event in events:
