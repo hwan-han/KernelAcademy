@@ -1,1 +1,24 @@
+from selenium import webdriver   # 동적페이지 적용
+from bs4 import BeautifulSoup 
+driver = webdriver.Chrome()      # 크롬에서 실행
+driver.implicitly_wait(3)        # 최대 3초 대기
+driver.get("https://fconline.nexon.com/news/events/list")
+page = driver.page_source
+bs_obj = BeautifulSoup(page,"html.parser")
+bs_obj = BeautifulSoup(page,"html.parser")
+print(events)
 
+# page_1의 이벤트들 
+events = bs_obj.find_all("a") 
+
+# 이벤트 제목과 기간 가져오기
+for event in events:
+    title_tag = event.find("span", class_="txt")
+    date_tag = event.find("span", class_="date")
+
+    if title_tag and date_tag:
+        title = title_tag.get_text(strip=True)
+        date = date_tag.get_text(strip=True)
+        print(f"제목: {title}")
+        print(f"기간: {date}")
+        print("-" * 30)
