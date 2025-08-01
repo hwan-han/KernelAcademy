@@ -1,0 +1,46 @@
+import requests
+from bs4 import BeautifulSoup
+from IPython.display import Image, display     # 이미지 출력 라이브러리
+
+headers = {
+    'User-Agent': 'Mozilla/5.0'
+}
+
+all_events = []
+
+
+for page_num in range(1, 4):
+    url = f"https://fconline.nexon.com/news/events/ListPart?n4PageNo={page_num}&strSearch=&emSearchType=title&n4ArticleCategorySN=0&n4ArticleCategory2SN=1"
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, "html.parser")
+
+    events = soup.find_all("a")
+
+    for event in events:
+        title_tag = event.find("span", class_="txt")
+        date_tag = event.find("span", class_="date")
+
+
+# 이미지 배너 출력
+        img_tag = event.find("img")                       
+        if img_tag:
+            img_url = img_tag.get("src")
+            if img_url and not img_url.startswith("http"):
+                img_url = "https://fconline.nexon.com" + img_url
+        else:
+            img_url = None
+
+        if title_tag and date_tag:
+            title = title_tag.get_text(strip=True)
+            date = date_tag.get_text(strip=True)
+            all_events.append((title, date, img_url))
+
+
+for title, date, img_url in all_events[:-3]:
+    print(f"제목: {title}")
+    print(f"기간: {date}")
+    if img_url:
+        display(Image(url=img_url))
+    else:
+        print("이미지 없음")
+    print("-" * 30)
